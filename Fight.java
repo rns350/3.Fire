@@ -4,20 +4,16 @@ import java.util.Collections;
 class Fight{
   int numEnemies;
   String [] players;
-  int [] initiative;
-
-  int [] plInit;
-
   ArrayList<Player> actives;
-
 
   Fight(String [] players){
     Scanner scn = new Scanner(System.in);
+
     this.players = players;
-    
     this.actives =  new ArrayList<Player>();
 
-    System.out.println("It's fighting time");
+    System.out.println("It's fightin' time");
+
     System.out.print("Enter number of enemies: ");
     this.numEnemies = scn.nextInt();
 
