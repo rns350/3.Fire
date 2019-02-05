@@ -1,7 +1,7 @@
 class Fire{
+  static String[] players = [];
   public static void main(String [] args){
-    //play dnd here
+    players = args;
   }
 }
-
 
