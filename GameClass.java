@@ -1,6 +1,7 @@
-Public Abstract Class GameClass{
+abstract class GameClass{
     int level;
-    static final Abstract int[] fortLevels, refLevels, willLevels, attackLevels;
+    static final abstract int[] fortLevels, refLevels, willLevels, attackLevels;
+    static final abstract int hitDie, skillGain;
 
     public int getFort(){
         return fortLevels[level - 1];
@@ -21,5 +22,7 @@ Public Abstract Class GameClass{
     public int getLevel(){
         return level;
     }
+
+    public abstract String Abilities();
 
 }
