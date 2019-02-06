@@ -11,21 +11,9 @@ class Fight{
 
     this.players = players;
     this.actives =  new ArrayList<Player>();
-
     System.out.println("It's fightin' time");
-
     System.out.print("Enter number of enemies: ");
     this.numEnemies = scn.nextInt();
-
-    this.rollInitiative();
-    this.rollPlayerInitiative();
-
-    Collections.sort(actives);
-
-    System.out.println();
-    for(Player player : actives){
-      System.out.println(player.name + " " + player.initiative);
-    }
   }
 
   public void rollInitiative(){
@@ -47,7 +35,16 @@ class Fight{
       actives.add(new Player(players[i], inRoll));
     }
     scn.close();
+  }
 
+  public void start(){
+    this.rollInitiative();
+    this.rollPlayerInitiative();
+    Collections.sort(actives);
+    System.out.println();
+    for(Player player : actives){
+      System.out.println(player.name + " " + player.initiative);
+    }
   }
 }
 
