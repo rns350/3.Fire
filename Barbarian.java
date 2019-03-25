@@ -15,6 +15,6 @@ class Barabarian Extends GameClass{
          several barbarian class skills are based on strength.  Dexterity is also useful to barbarians, 
          especially those who wear light armor.  Wisdom is also important for several of the barbarian's 
          class skills.  A high constitution score lets a barbarian rage longer (and live longer, because 
-         it gives him more hit points)"
+         it gives him more hit points)";
     }
 }
