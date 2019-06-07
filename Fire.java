@@ -7,16 +7,26 @@ public class Fire{
     String [] players = args;
 
     AVLTree<Integer> binary = new AVLTree<Integer>();
-    System.out.println(binary.insert(5));
-    System.out.println(binary.insert(6));
-    System.out.println(binary.insert(7));
-    System.out.println(binary.insert(3));
-    System.out.println(binary.insert(9));
-    System.out.println(binary.insert(4));
-    System.out.println(binary.insert(2));
-    System.out.println(binary.insert(8));
-    System.out.println(binary.insert(0));
-    System.out.println(binary.insert(1));
+    binary.insert(5);
+    binary.insert(10);
+    binary.insert(1);
+    binary.insert(11);
+    binary.insert(9);
+    binary.insert(2);
+    binary.insert(0);
+    binary.insert(12);
+    binary.insert(13);
+    binary.insert(14);
+    binary.insert(-5);
+    binary.insert(-10);
+    binary.insert(-1);
+    binary.insert(-11);
+    binary.insert(-9);
+    binary.insert(-2);
+    binary.insert(0);
+    binary.insert(-12);
+    binary.insert(-13);
+    binary.insert(-14);
 
     System.out.println(binary.toString());
 

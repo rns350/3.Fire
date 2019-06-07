@@ -11,6 +11,10 @@ public class AVLTree<E extends Comparable<E>>{
         Node(E data){
             this.data = data;
         }
+
+        int compareTo(Node<E> check){
+            return this.data.compareTo(check.data);
+        }
     }
 
     Node<E> head;
@@ -26,7 +30,21 @@ public class AVLTree<E extends Comparable<E>>{
     }
 
     private void findHeight(Node<E> check){
-        check.height = Math.max(height(check.left), height(check.right)) + 1;
+        if(check == null){
+            return;
+        }
+        if(check.left == null && check.right == null){
+            check.height = 1;
+        }
+        else if(check.left == null){
+            check.height = height(check.right) + 1;
+        }
+        else if(check.right == null){
+            check.height = height(check.left) + 1;
+        }
+        else{
+            check.height = Math.max(height(check.left), height(check.right)) + 1;
+        }
     }
 
     public int insert(E data){
@@ -62,6 +80,7 @@ public class AVLTree<E extends Comparable<E>>{
         current.height = 1;
         size ++;
         update(current.parent);
+
         return 0;
     }
 
@@ -70,7 +89,12 @@ public class AVLTree<E extends Comparable<E>>{
         do{
             older = height(current);
             if(!isBalanced(current)){
-                current = rotate(current);
+                if(current.compareTo(current.parent) > 0){
+                    current.parent.right = rotate(current);
+                }
+                else{
+                    current.parent.left = rotate(current);
+                }
                 findHeight(current.left);
                 findHeight(current.right);
             }
@@ -79,6 +103,61 @@ public class AVLTree<E extends Comparable<E>>{
             current = current.parent;
         }
         while(older != newer && current != null);
+        System.out.println(this.toString());
+    }
+
+    private Node<E> rotate(Node<E> unfit){
+        System.out.println(this.toString());
+        if(BFactor(unfit) > 0){
+            if(BFactor(unfit.left) < 0){
+                return LR_Rotate(unfit);
+            }
+            else{
+                return LL_Rotate(unfit);
+            }
+        }
+        else{
+            if(BFactor(unfit.right) > 0){
+                return RL_Rotate(unfit);
+            }
+            else{
+                return RR_Rotate(unfit);
+            }
+        }
+    }
+
+    private Node<E> RR_Rotate(Node<E> unfit){
+        Node<E> temp = unfit;
+        unfit = unfit.right;
+        unfit.parent = temp.parent;
+        temp.right = unfit.left;
+        unfit.left = temp;
+        temp.parent = unfit;
+        return unfit;
+    }
+
+    private Node<E> RL_Rotate(Node<E> unfit){
+        unfit.right = RR_Rotate(unfit.right);
+        return LL_Rotate(unfit);
+    }
+
+    private Node<E> LL_Rotate(Node<E> unfit){
+        Node<E> temp = unfit;
+        unfit = unfit.left;
+        unfit.parent = temp.parent;
+        temp.left = unfit.right;
+        unfit.right = temp;
+        temp.parent = unfit;
+        return unfit;
+    }
+
+    private Node<E> LR_Rotate(Node<E> unfit){
+        unfit.left = LL_Rotate(unfit.left);
+        return RR_Rotate(unfit);
+    }
+
+    private int BFactor(Node<E> check){
+        return height(check.left) - height(check.right);
     }
 
     private boolean isBalanced(Node<E> check){
