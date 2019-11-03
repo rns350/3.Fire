@@ -61,7 +61,7 @@ public class Party extends ArrayList<Character> implements Serializable{
         while(true){
             System.out.println("Please select an option\n-----------------------\n"
                                 + "1 - add character\n2 - remove character\n3 - replace character\n"
-                                + "4 - edit character\n5 - see current party\n6 - finish party\n");
+                                + "4 - edit character\n5 - see current party\n6 - finish editing party\n");
             switch(Fire.in.nextLine()){
             case "1":
                 System.out.print("\nMaking party member " + (size() + 1) + "\n--------------------");
@@ -110,7 +110,7 @@ public class Party extends ArrayList<Character> implements Serializable{
         while(true){
             System.out.println("Please select an option\n-----------------------\n"
                                 + "1 - add character\n2 - remove character\n3 - replace character\n4 - edit character\n5 - see current party"
-                                + "\n6 - finish party\n7 - quit party creation\n");
+                                + "\n6 - finish inputting party\n7 - quit party creation\n");
             switch(Fire.in.nextLine()){
             case "1":
                 System.out.print("\nMaking party member " + (party.size() + 1) + "\n--------------------");
