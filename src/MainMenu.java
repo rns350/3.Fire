@@ -144,6 +144,7 @@ public class MainMenu{
             System.out.println("Save Adventure? (Y/N)\n");
             switch (Fire.in.nextLine().toLowerCase()) {
             case "y":
+                System.out.println();
                 current.saveFile();
                 getInput = false;
                 break;

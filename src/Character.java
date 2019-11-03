@@ -1,5 +1,7 @@
 import java.util.*;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+
 public class Character implements Serializable{
     private static final long serialVersionUID = 436861726163746572L;
     private String name;
@@ -146,7 +148,7 @@ public class Character implements Serializable{
     }
 
     private static String validateName(String name, Party party){
-        if(party.containsName(name)) { 
+        if(party.containsName(name.trim())) { 
             return "Two Characters in the same party can't share a name.  Try again.";
         }
         return validateName(name);
@@ -156,24 +158,23 @@ public class Character implements Serializable{
         if(name.length() == 0) {
             return "A Character needs a name.  Try again";
         }
-        String temp = name.trim();
-        if(temp.length() == 0){
-            return "A Character's name can not only be white space.  Try again.";
-        }
         int i;
         char c;
-        for(i = 0; i < temp.length(); i ++){
-            c = temp.charAt(i);
-            if(c == '[' || c == ']'){
-                return "A Character's name cannot include [, ], any arrow keys,\nor any functional keyboard buttons";
-            }
-            if(c >= '!' && c <= '~'){
-                break;
+        for(i = 0; i < name.length(); i ++){
+            c = name.charAt(i);
+            if(c < ' ' || c > '~'){
+                return "A Character's name can only contain printable ASCII characters.\n"
+                        + "Spaces are the only acceptable white space.\n"
+                        + "Try again.";
             }
         }
-        if(i == temp.length()){
-            System.out.println("Hi");
-            return "A Character's name must have at least one readable character. Try again.";
+        int length = name.trim().length();
+        if(length == 0){
+            return "A Character's name cannot only be white space.  Try again.";
+        }
+        if(length > 20){
+            return "A Character's name cannot be more than 20 characters,\n"
+                    + "excluding leading and trailing white space. Try again.";
         }
         return null;
     }
@@ -217,12 +218,10 @@ public class Character implements Serializable{
     }
 
     public static void main(String [] args){
-        Character Raffi = new Character("Raffi", 10, 20, 12, 14, 13, 16);
-        int[] results = new int[20];
-        for(int i = 0; i < 1000000; i ++){
-            results[Raffi.rollInitiative() - 6] ++;
+        String input = Fire.in.nextLine();
+        input.trim();
+        for(int i = 0; i < input.length(); i ++){
+            System.out.println((int) input.charAt(i));
         }
-        System.out.println(Arrays.toString(results));
-
     }
 }

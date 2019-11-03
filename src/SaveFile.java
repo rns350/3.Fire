@@ -96,11 +96,25 @@ public class SaveFile implements Serializable {
 
     public boolean saveFile(){
         try{
-            Path saveDirectory = Paths.get("./../data/adventureData");
+            Path saveDirectory = Paths.get(MainMenu.SAVE_FILE_LOCATION);
             if(!Files.exists(saveDirectory)){
                 Files.createDirectory(saveDirectory);
             }
-            File save = new File("./../data/adventureData/" + name + ".txt");
+            String[] files = MainMenu.getSaves();
+            for(String s : files){
+                if(s.equals(name + ".txt")){
+                    while(true){
+                        System.out.println("WARNING: SAVE FILE \"" + name + "\" EXISTS.\n"
+                                            + "WOULD YOU LIKE TO OVERWRITE IT? (Y/N)\n");
+                        String input = Fire.in.nextLine().toLowerCase();
+                        if(input.equals("y")) {break;}
+                        if(input.equals("n")) {return false;}
+                        System.out.println("\nInvalid input. Try again.");
+                    }
+                    break;
+                }
+            }
+            File save = new File(MainMenu.SAVE_FILE_LOCATION + "/" + name + ".txt");
             FileOutputStream dest = new FileOutputStream(save);
             ObjectOutputStream out = new ObjectOutputStream(dest);
 
@@ -120,23 +134,23 @@ public class SaveFile implements Serializable {
         if(name.length() == 0) {
             return "A Campaign needs a name.  Try again";
         }
-        String temp = name.trim();
-        if(temp.length() == 0){
-            return "A Campaigns's name can not only be white space.  Try again.";
-        }
         int i;
         char c;
-        for(i = 0; i < temp.length(); i ++){
-            c = temp.charAt(i);
-            if(c == '[' || c == ']'){
-                return "A Campaign's name cannot include [, ], any arrow keys,\nor any functional keyboard buttons";
-            }
-            if(c >= '!' && c <= '~'){
-                break;
+        for(i = 0; i < name.length(); i ++){
+            c = name.charAt(i);
+            if(c < ' ' || c > '~'){
+                return "A Campaign's name can only contain printable ASCII characters.\n"
+                        + "Spaces are the only acceptable white space.\n"
+                        + "Try again.";
             }
         }
-        if(i == temp.length()){
-            return "A Character's name must have at least one readable character. Try again.";
+        int length = name.trim().length();
+        if(length == 0){
+            return "A Campaigns's name can not only be white space.  Try again.";
+        }
+        if(length > 20){
+            return "A Campaign's name can not be more than 20 characters,\n"
+                    + "excluding leading and trailing white space. Try again.";
         }
         return null;
     }

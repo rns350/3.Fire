@@ -173,8 +173,8 @@ public class Party extends ArrayList<Character> implements Serializable{
             if (index == -1) {
                 System.out.println("\nInvalid Character Name; try again");
             } else {
+                System.out.println("\nRemoving Character" + get(index) + "...\n");
                 remove(index);
-                System.out.println();
                 return true;
             }
         }
