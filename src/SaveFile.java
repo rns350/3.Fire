@@ -37,6 +37,10 @@ public class SaveFile implements Serializable {
         }
     }
 
+    public boolean editParty(){
+        return party.editParty();
+    }
+
     public void editSave(){
         while (true) {
             System.out.println("select an option\n----------------\n1 - edit party\n2 - replace party\n3 - edit name\n4 - view current save file\n5 - done\n");
@@ -114,6 +118,7 @@ public class SaveFile implements Serializable {
                     break;
                 }
             }
+            System.out.println();
             File save = new File(MainMenu.SAVE_FILE_LOCATION + "/" + name + ".txt");
             FileOutputStream dest = new FileOutputStream(save);
             ObjectOutputStream out = new ObjectOutputStream(dest);

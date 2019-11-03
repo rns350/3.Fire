@@ -150,6 +150,7 @@ public class MainMenu{
                 break;
             case "n":
                 getInput = false;
+                System.out.println();
                 break;
             default:
                 System.out.println("\nInvalid input.  Try again.");
@@ -157,7 +158,7 @@ public class MainMenu{
         }
         getInput = true;
         while(getInput){
-            System.out.println("\nWould you like to load this Adventure? (Y/N)\n");
+            System.out.println("Would you like to load this Adventure? (Y/N)\n");
             switch (Fire.in.nextLine().toLowerCase()) {
             case "y":
                 System.out.println();
