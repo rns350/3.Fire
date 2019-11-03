@@ -40,6 +40,10 @@ public class Party extends ArrayList<Character> implements Serializable{
     public boolean editCharacter(){
         String name;
         int index;
+        if(this.size() == 0){
+            System.out.println("There are no characters to edit\n");
+            return false;
+        }
         while(true){
             System.out.println("Please enter the name of the character you wish to edit, or Q to quit\n");
             name = Fire.in.nextLine();

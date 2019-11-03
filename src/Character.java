@@ -51,8 +51,8 @@ public class Character implements Serializable{
     public void edit(Party party){
         int choice = 0;
         while(true){
-            System.out.println("Choose a feature to edit (Q to quit, NAME for name)"
-                            + "\n--------------------------------------------------");
+            System.out.println("Choose a feature to edit (Q to quit, NAME for name, STAT_NAME for stat)"
+                            + "\n---------------------------------------------------------------------");
             System.out.println("\n" + this + "\n");
             switch(Fire.in.nextLine().toLowerCase()){
             case "name":
@@ -99,7 +99,7 @@ public class Character implements Serializable{
                 System.out.println();
                 return;
             default:
-                System.out.println("\nPlease choose a valid number from the list");
+                System.out.println("\nPlease choose a valid option from the list");
                 break;
             }
         }
