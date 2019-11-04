@@ -51,8 +51,7 @@ public class Party extends ArrayList<Character> implements Serializable{
             index = this.getName(name);
             if(name.equalsIgnoreCase("q")){return false;}
             if(index != -1){
-                get(index).edit(this);
-                return true;
+                return get(index).edit(this);
             }
             else{
                 System.out.println("Invalid input. Try again.");
@@ -62,6 +61,7 @@ public class Party extends ArrayList<Character> implements Serializable{
 
     public boolean editParty(){
         Character c;
+        boolean wasEdited = false;
         while(true){
             System.out.println("Please select an option\n-----------------------\n"
                                 + "1 - add character\n2 - remove character\n3 - replace character\n"
@@ -76,19 +76,22 @@ public class Party extends ArrayList<Character> implements Serializable{
                 }
                 System.out.println();
                 c = Character.inputPartyCharacter(this);
-                if (c != null) {add(c);}
+                if (c != null) {
+                    add(c);
+                    wasEdited = true;
+                }
                 break;
             case "2":
                 System.out.println();
-                removeCharacter();
+                if(removeCharacter()){wasEdited = true;}
                 break;
             case "3":
                 System.out.println();
-                replaceCharacter();
+                if(replaceCharacter()){wasEdited = true;}
                 break;
             case "4":
                 System.out.println();
-                editCharacter();
+                if(editCharacter()){wasEdited = true;}
                 break;
             case "5":
                 System.out.println("\n" + this + "\n");
@@ -99,7 +102,7 @@ public class Party extends ArrayList<Character> implements Serializable{
                     break;
                 }
                 System.out.println();
-                return true;
+                return wasEdited;
             default:
                 System.out.println("\nInvalid input. Try again");
                 break;
@@ -150,8 +153,23 @@ public class Party extends ArrayList<Character> implements Serializable{
                 System.out.println();
                 return party;
             case "7":
-                System.out.println();
-                return null;
+                while(true){
+                    System.out.println("\nWARNING: EXITING NOW WILL DELETE YOUR\n"
+                                        + "PARTY BUILDING PROGRESS.  CONTINUE TO EXIT? (Y/N)\n");
+                    switch(Fire.in.nextLine()){
+                    case "y": 
+                        System.out.println();
+                        return null;
+                    case "n":
+                    System.out.println();
+                        break;
+                    default:
+                        System.out.println("\nInvalid input. Try again.");
+                        continue;
+                    }
+                    break;
+                }
+                break;
             default:
                 System.out.println("\nInvalid input. Try again");
                 break;

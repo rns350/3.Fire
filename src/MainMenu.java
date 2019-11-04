@@ -6,7 +6,6 @@ public class MainMenu{
 
     public static SaveFile launch(){
         SaveFile currentSave;
-        System.out.println();
         while(true) {
             if (filesExist()) {
                 currentSave = launchReturningMenu();
@@ -96,7 +95,7 @@ public class MainMenu{
             }
             if (index < saveFiles.length) {getInput = false;}
             else {
-                System.out.println("\nInvalid input; try again");
+                System.out.println("\nInvalid input. try again");
                 index = 0;
             }
         }

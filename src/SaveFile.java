@@ -1,15 +1,38 @@
 import java.util.*;
 import java.io.*;
 import java.nio.file.*;
-
 public class SaveFile implements Serializable {
     final static long serialVersionUID = 8372057649023L;
     private String name;
     private Party party;
+    private boolean wasEdited = false;
 
     public SaveFile(String name, Party party) {
         this.name = name;
         this.party = party;
+    }
+
+    public boolean wasEdited(){
+        return wasEdited;
+    }
+
+    public boolean safeToExit(){
+        if(!wasEdited) {return true;}
+        while(true){
+            System.out.println("WARNING: YOU HAVE NOT SAVED YOUR CHANGES.\n"
+                                + "CONTINUE TO EXIT? (Y/N)\n");
+            switch(Fire.in.nextLine()){
+            case "y":
+                System.out.println();
+                return true;
+            case "n":
+                System.out.println();
+                return false;
+            default:
+                System.out.println("\nInvalid input. Try again.");
+                continue;
+            }
+        }
     }
 
     public boolean verifySave() {
@@ -38,12 +61,16 @@ public class SaveFile implements Serializable {
     }
 
     public boolean editParty(){
-        return party.editParty();
+        boolean edited = party.editParty();
+        if(edited) {wasEdited = true;}
+        return edited;
     }
 
     public void editSave(){
         while (true) {
-            System.out.println("select an option\n----------------\n1 - edit party\n2 - replace party\n3 - edit name\n4 - view current save file\n5 - done\n");
+            System.out.println("select an option\n----------------\n1 - edit party\n"
+                                + "2 - replace party\n3 - edit campaign name\n"
+                                + "4 - view current save file\n5 - done\n");
             switch (Fire.in.nextLine().toLowerCase()) {
             case "1":
                 System.out.println();
@@ -55,6 +82,7 @@ public class SaveFile implements Serializable {
                 if(temp != null) {
                     System.out.println("Replacing the old party...\n");
                     party = temp;
+                    wasEdited = true;
                 }
                 break;
             case "3":
@@ -72,6 +100,7 @@ public class SaveFile implements Serializable {
                 if(!tempS.equalsIgnoreCase("\\q")) {
                     System.out.println("Replacing name \"" + name + "\" with name \"" + tempS + "\"\n");
                     this.name = tempS;
+                    wasEdited = true;
                 }
                 break;
             case "4":
@@ -89,7 +118,7 @@ public class SaveFile implements Serializable {
 
     public String toString() {
         StringBuilder build = new StringBuilder();
-        build.append(name + "\n");
+        build.append("Campaign name: " + name + "\n---------------");
         for (int i = 0; i < name.length(); i++) {
             build.append("-");
         }
@@ -115,14 +144,15 @@ public class SaveFile implements Serializable {
                         if(input.equals("n")) {return false;}
                         System.out.println("\nInvalid input. Try again.");
                     }
+                    System.out.println();
                     break;
                 }
             }
-            System.out.println();
             File save = new File(MainMenu.SAVE_FILE_LOCATION + "/" + name + ".txt");
             FileOutputStream dest = new FileOutputStream(save);
             ObjectOutputStream out = new ObjectOutputStream(dest);
 
+            wasEdited = false;
             out.writeObject(this);
             out.close();
             dest.close();

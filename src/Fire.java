@@ -6,6 +6,7 @@ public class Fire{
     static SaveFile currentSave;
     static Scanner in = new Scanner(System.in);
     public static void main(String [] args){
+        System.out.println();
         currentSave = MainMenu.launch();
         System.out.println(currentSave + "\n");
         while(true){
@@ -25,8 +26,11 @@ public class Fire{
                 currentSave.saveFile();
                 break;
             case "4":
-                currentSave = MainMenu.launch();
-                System.out.println(currentSave + "\n");
+                System.out.println();
+                if(currentSave.safeToExit()){
+                    currentSave = MainMenu.launch();
+                    System.out.println(currentSave + "\n");
+                }
                 break;
             default: 
                 System.out.println("Invalid input. Try again.");

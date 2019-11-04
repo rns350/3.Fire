@@ -2,10 +2,42 @@ import java.util.*;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
+enum SKILL 
+    {
+        APPRAISE(1), BALANCE(2), BLUFF(3), CLIMB(4), CONCENTRATION(5), 
+        DECIPHER_SCRIPT(6), DIPLOMACY(7), DISABLE_DEVICE(8),
+        DISGUISE(9), ESCAPE_ARTIST(10), fORGERY(11), GATHER_INFORMATION(12),
+        HANDLE_ANIMAL(13), HEAL(14), HIDE(15), INTIMIDATE(16), JUMP(17), 
+        LISTEN(18), MOVE_SILENTLY(19), OPEN_LOCK(20), RIDE(21), 
+        SEARCH(22), SENSE_MOTIVE(23), SLEIGHT_OF_HAND(24), SPELLCRAFT(25), 
+        SPOT(26), SURVIVAL(27), SWIM(28), TUMBLE(29), USE_MAGIC_DEVICE(30), 
+        USE_ROPE(31), KNOW_ARCANA(32), KNOW_DUNGEONEERING(33), KNOW_ENGENEERING(34), 
+        KNOW_GEOGRAPHY(35), KNOW_HISTORY(36), KNOW_LOCAL(37), KNOW_NATURE(38), 
+        KNOW_NOBILITY(39), KNOW_PLANES(40), KNOW_RELIGION(41);
+
+        private int value;
+        private SKILL(int value){
+            this.value = value;
+        }
+
+        public int getValue(){
+            return value;
+        }
+    }
+
 public class Character implements Serializable{
+    public static final EnumMap<SKILL, Integer> skillValue = new EnumMap<SKILL, Integer>(SKILL.class);
+    static {
+        for(SKILL s : SKILL.values()){
+            skillValue.put(s, s.getValue());
+        }
+    }
+
     private static final long serialVersionUID = 436861726163746572L;
     private String name;
     private int str, dex, con, intel, wis, cha;
+    private int [] skillRanks;
+    private int skillPoints;
     public Character(String name, int str, int dex, int con, int intel, int wis, int cha){
         this.name = name.trim();
         this.str = str;
@@ -14,6 +46,44 @@ public class Character implements Serializable{
         this.intel = intel;
         this.wis = wis;
         this.cha = cha;
+        skillRanks = new int[SKILL.KNOW_RELIGION.getValue()];
+    }
+
+    public int rollSkill(SKILL type){
+
+        switch(type){
+        case CLIMB:
+        case JUMP:
+        case SWIM:
+            return Dice.roll(20) + getRanks(type) + strMod();
+        case BALANCE:
+        case ESCAPE_ARTIST:
+        case HIDE:
+        case MOVE_SILENTLY:
+        case OPEN_LOCK:
+        case RIDE:
+        case SLEIGHT_OF_HAND:
+        case TUMBLE:
+        case USE_ROPE:
+            return Dice.roll(20) + getRanks(type) + dexMod();
+        case APPRAISE:
+        case DECIPHER_SCRIPT:
+        case DISABLE_DEVICE:
+        case fORGERY:
+        case SEARCH:
+        case SPELLCRAFT:
+        }
+        return 0;
+    }
+
+    public int getRanks(SKILL type){
+        return skillRanks[type.getValue()];
+    }
+
+    public void enterRanks(){
+        while (true){
+            System.out.println();
+        }
     }
 
     public String getName(){
@@ -24,8 +94,28 @@ public class Character implements Serializable{
         return name.equals(s);
     }
 
+    public int strMod(){
+        return str/2 - 5;
+    }
+
     public int dexMod(){
         return dex/2 - 5;
+    }
+
+    public int conMod(){
+        return con/2 - 5;
+    }
+
+    public int intMod(){
+        return intel/2 - 5;
+    }
+
+    public int wisMod(){
+        return wis/5 - 2;
+    }
+
+    public int chaMod(){
+        return cha/2 - 5;
     }
 
     public int rollInitiative(){
@@ -48,56 +138,75 @@ public class Character implements Serializable{
         return build.toString();
     }
 
-    public void edit(Party party){
+    public boolean edit(Party party){
         int choice = 0;
+        boolean wasEdited = false;
         while(true){
             System.out.println("Choose a feature to edit (Q to quit, NAME for name, STAT_NAME for stat)"
-                            + "\n---------------------------------------------------------------------");
+                            + "\n-----------------------------------------------------------------------");
             System.out.println("\n" + this + "\n");
             switch(Fire.in.nextLine().toLowerCase()){
             case "name":
                 System.out.println();
-                editName(party);
+                if(editName(party)) {wasEdited = true;}
                 break;
             case "str":
                 System.out.println();
                 choice = scanAbilityScore("new strength");
                 if(choice == 0) {continue;}
-                else {str = choice;}
+                else {
+                    str = choice;
+                    wasEdited = true;
+                }
                 break;
             case "dex":
                 System.out.println();
                 choice = scanAbilityScore("new dexterity");
                 if(choice == 0) {continue;}
-                else {dex = choice;}
+                else {
+                    dex = choice;
+                    wasEdited = true;
+                }
                 break;
             case "con":
                 System.out.println();
                 choice = scanAbilityScore("new constitution");
                 if(choice == 0) {continue;}
-                else {con = choice;}
+                else {
+                    con = choice;
+                    wasEdited = true;
+                }
                 break;
             case "int":
                 System.out.println();
                 choice = scanAbilityScore("new intelligence");
                 if(choice == 0) {continue;}
-                else {intel = choice;}
+                else {
+                    intel = choice;
+                    wasEdited = true;
+                }
                 break;
             case "wis":
                 System.out.println();
                 choice = scanAbilityScore("new wisdom");
                 if(choice == 0) {continue;}
-                else {wis = choice;}
+                else {
+                    wis = choice;
+                    wasEdited = true;
+                }
                 break;
             case "cha":
                 System.out.println();
                 choice = scanAbilityScore("new charisma");
                 if(choice == 0) {continue;}
-                else {cha = choice;}
+                else {
+                    cha = choice;
+                    wasEdited = true;
+                }
                 break;
             case "q":
                 System.out.println();
-                return;
+                return wasEdited;
             default:
                 System.out.println("\nPlease choose a valid option from the list");
                 break;
@@ -105,7 +214,7 @@ public class Character implements Serializable{
         }
     }
 
-    public void editName(Party party){
+    public boolean editName(Party party){
         String name;
         String message;
         while(true){
@@ -113,15 +222,14 @@ public class Character implements Serializable{
             name = Fire.in.nextLine();
             System.out.println();
             if(name.equalsIgnoreCase("\\q")){
-                return;
+                return false;
             }
             message = validateName(name, party);
             if(message == null){
                 this.name = name.trim();
-                return;
+                return true;
             }
             System.out.println(message);
-
         }
     }
 
@@ -218,10 +326,6 @@ public class Character implements Serializable{
     }
 
     public static void main(String [] args){
-        String input = Fire.in.nextLine();
-        input.trim();
-        for(int i = 0; i < input.length(); i ++){
-            System.out.println((int) input.charAt(i));
-        }
+        System.out.println(skillValue.get(SKILL.APPRAISE));
     }
 }
