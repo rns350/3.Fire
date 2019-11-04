@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
-enum SKILL 
+enum Skill 
     {
         APPRAISE(1), BALANCE(2), BLUFF(3), CLIMB(4), CONCENTRATION(5), 
         DECIPHER_SCRIPT(6), DIPLOMACY(7), DISABLE_DEVICE(8),
@@ -15,8 +15,15 @@ enum SKILL
         KNOW_GEOGRAPHY(35), KNOW_HISTORY(36), KNOW_LOCAL(37), KNOW_NATURE(38), 
         KNOW_NOBILITY(39), KNOW_PLANES(40), KNOW_RELIGION(41);
 
+        public static final EnumMap<Skill, Integer> skillValue = new EnumMap<Skill, Integer>(Skill.class);
+        static {
+            for(Skill s : Skill.values()){
+                skillValue.put(s, s.getValue());
+            }
+        }
+
         private int value;
-        private SKILL(int value){
+        private Skill(int value){
             this.value = value;
         }
 
@@ -25,14 +32,27 @@ enum SKILL
         }
     }
 
-public class Character implements Serializable{
-    public static final EnumMap<SKILL, Integer> skillValue = new EnumMap<SKILL, Integer>(SKILL.class);
+enum StatType{
+    STR("str"), DEX("dex"), CON("con"), WIS("wis"), INTEL("int"), CHA("cha");
+
+    public static final EnumMap<StatType, String> statValue = new EnumMap<StatType, String>(StatType.class);
     static {
-        for(SKILL s : SKILL.values()){
-            skillValue.put(s, s.getValue());
+        for(StatType s : StatType.values()){
+            statValue.put(s, s.getValue());
         }
     }
 
+    private String value;
+    private StatType(String value){
+        this.value = value;
+    }
+
+    public String getValue(){
+        return value;
+    }
+}
+
+public class Character implements Serializable{
     private static final long serialVersionUID = 436861726163746572L;
     private String name;
     private int str, dex, con, intel, wis, cha;
@@ -46,10 +66,10 @@ public class Character implements Serializable{
         this.intel = intel;
         this.wis = wis;
         this.cha = cha;
-        skillRanks = new int[SKILL.KNOW_RELIGION.getValue()];
+        skillRanks = new int[Skill.KNOW_RELIGION.getValue()];
     }
 
-    public int rollSkill(SKILL type){
+    public int rollSkill(Skill type){
 
         switch(type){
         case CLIMB:
@@ -76,7 +96,7 @@ public class Character implements Serializable{
         return 0;
     }
 
-    public int getRanks(SKILL type){
+    public int getRanks(Skill type){
         return skillRanks[type.getValue()];
     }
 
@@ -326,6 +346,6 @@ public class Character implements Serializable{
     }
 
     public static void main(String [] args){
-        System.out.println(skillValue.get(SKILL.APPRAISE));
+        System.out.println(Skill.skillValue.get(Skill.APPRAISE));
     }
 }
