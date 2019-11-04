@@ -195,7 +195,7 @@ public class Party extends ArrayList<Character> implements Serializable{
             if (index == -1) {
                 System.out.println("\nInvalid Character Name; try again");
             } else {
-                System.out.println("\nRemoving Character" + get(index) + "...\n");
+                System.out.println("\nRemoving Character\n\n" + get(index) + "\n");
                 remove(index);
                 return true;
             }
@@ -229,7 +229,7 @@ public class Party extends ArrayList<Character> implements Serializable{
         if (c == null)
             return false;
         set(index, c);
-        System.out.println();
+        System.out.println("Success!\n");
         return true;
     }
 
