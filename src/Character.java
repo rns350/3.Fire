@@ -2,36 +2,6 @@ import java.util.*;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
-enum Skill 
-    {
-        APPRAISE(1), BALANCE(2), BLUFF(3), CLIMB(4), CONCENTRATION(5), 
-        DECIPHER_SCRIPT(6), DIPLOMACY(7), DISABLE_DEVICE(8),
-        DISGUISE(9), ESCAPE_ARTIST(10), fORGERY(11), GATHER_INFORMATION(12),
-        HANDLE_ANIMAL(13), HEAL(14), HIDE(15), INTIMIDATE(16), JUMP(17), 
-        LISTEN(18), MOVE_SILENTLY(19), OPEN_LOCK(20), RIDE(21), 
-        SEARCH(22), SENSE_MOTIVE(23), SLEIGHT_OF_HAND(24), SPELLCRAFT(25), 
-        SPOT(26), SURVIVAL(27), SWIM(28), TUMBLE(29), USE_MAGIC_DEVICE(30), 
-        USE_ROPE(31), KNOW_ARCANA(32), KNOW_DUNGEONEERING(33), KNOW_ENGENEERING(34), 
-        KNOW_GEOGRAPHY(35), KNOW_HISTORY(36), KNOW_LOCAL(37), KNOW_NATURE(38), 
-        KNOW_NOBILITY(39), KNOW_PLANES(40), KNOW_RELIGION(41);
-
-        public static final EnumMap<Skill, Integer> skillValue = new EnumMap<Skill, Integer>(Skill.class);
-        static {
-            for(Skill s : Skill.values()){
-                skillValue.put(s, s.getValue());
-            }
-        }
-
-        private int value;
-        private Skill(int value){
-            this.value = value;
-        }
-
-        public int getValue(){
-            return value;
-        }
-    }
-
 enum StatType{
     STR("str"), DEX("dex"), CON("con"), WIS("wis"), INTEL("int"), CHA("cha");
 
@@ -66,51 +36,13 @@ public class Character implements Serializable{
         this.intel = intel;
         this.wis = wis;
         this.cha = cha;
-        skillRanks = new int[Skill.KNOW_RELIGION.getValue()];
-    }
-
-    public int rollSkill(Skill type){
-
-        switch(type){
-        case CLIMB:
-        case JUMP:
-        case SWIM:
-            return Dice.roll(20) + getRanks(type) + strMod();
-        case BALANCE:
-        case ESCAPE_ARTIST:
-        case HIDE:
-        case MOVE_SILENTLY:
-        case OPEN_LOCK:
-        case RIDE:
-        case SLEIGHT_OF_HAND:
-        case TUMBLE:
-        case USE_ROPE:
-            return Dice.roll(20) + getRanks(type) + dexMod();
-        case APPRAISE:
-        case DECIPHER_SCRIPT:
-        case DISABLE_DEVICE:
-        case fORGERY:
-        case SEARCH:
-        case SPELLCRAFT:
-        }
-        return 0;
-    }
-
-    public int getRanks(Skill type){
-        return skillRanks[type.getValue()];
-    }
-
-    public void enterRanks(){
-        while (true){
-            System.out.println();
-        }
     }
 
     public String getName(){
         return name;
     }
 
-    public boolean equalsName(String s){
+    public boolean equals(String s){
         return name.equals(s);
     }
 
@@ -244,7 +176,7 @@ public class Character implements Serializable{
             if(name.equalsIgnoreCase("\\q")){
                 return false;
             }
-            message = validateName(name, party);
+            message = party.validPartyName(name);
             if(message == null){
                 this.name = name.trim();
                 return true;
@@ -260,7 +192,7 @@ public class Character implements Serializable{
             System.out.print("Enter the Character's name (\\Q to quit): ");
             name = Fire.in.nextLine();
             if(name.equalsIgnoreCase("\\q")) {System.out.println(); return null;}
-            String message = validateName(name, party);
+            String message = party.validPartyName(name);
             if(message == null) {break;}
             else{System.out.println("\n" + message);}
         }
@@ -275,14 +207,7 @@ public class Character implements Serializable{
         return new Character(name, str, dex, con, intel, wis, cha);
     }
 
-    private static String validateName(String name, Party party){
-        if(party.containsName(name.trim())) { 
-            return "Two Characters in the same party can't share a name.  Try again.";
-        }
-        return validateName(name);
-    }
-
-    private static String validateName(String name){
+    public static String validName(String name){
         if(name.length() == 0) {
             return "A Character needs a name.  Try again";
         }

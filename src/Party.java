@@ -37,6 +37,13 @@ public class Party extends ArrayList<Character> implements Serializable{
         return this.containsName(c.getName());
     }
 
+    public String validPartyName(String name){
+        if(containsName(name.trim())) { 
+            return "Two Characters in the same party can't share a name.  Try again.";
+        }
+        return Character.validName(name);
+    }
+
     public boolean editCharacter(){
         String name;
         int index;
@@ -110,73 +117,6 @@ public class Party extends ArrayList<Character> implements Serializable{
         }
     }
 
-    public static Party inputParty(){
-        System.out.println("Creating party");
-        Character c;
-        Party party = new Party();
-        while(true){
-            System.out.println("Please select an option\n-----------------------\n"
-                                + "1 - add character\n2 - remove character\n3 - replace character\n4 - edit character\n5 - see current party"
-                                + "\n6 - finish inputting party\n7 - quit party creation\n");
-            switch(Fire.in.nextLine()){
-            case "1":
-                System.out.print("\nMaking party member " + (party.size() + 1) + "\n--------------------");
-                int i = party.size() + 1;
-                while(i != 0){
-                    System.out.print("-");
-                    i /= 10;
-                }
-                System.out.println();
-                c = Character.inputPartyCharacter(party);
-                if (c != null) {party.add(c);}
-                break;
-            case "2":
-                System.out.println();
-                party.removeCharacter();
-                break;
-            case "3":
-                System.out.println();
-                party.replaceCharacter();
-                break;
-            case "4":
-                System.out.println();
-                party.editCharacter();
-                break;
-            case "5":
-                System.out.println("\n" + party + "\n");
-                break;
-            case "6":
-                if(party.size() == 0){
-                    System.out.println("\nThere must be at least 1 member in a party. Try again.\n");
-                    break;
-                }
-                System.out.println();
-                return party;
-            case "7":
-                while(true){
-                    System.out.println("\nWARNING: EXITING NOW WILL DELETE YOUR\n"
-                                        + "PARTY BUILDING PROGRESS.  CONTINUE TO EXIT? (Y/N)\n");
-                    switch(Fire.in.nextLine()){
-                    case "y": 
-                        System.out.println();
-                        return null;
-                    case "n":
-                    System.out.println();
-                        break;
-                    default:
-                        System.out.println("\nInvalid input. Try again.");
-                        continue;
-                    }
-                    break;
-                }
-                break;
-            default:
-                System.out.println("\nInvalid input. Try again");
-                break;
-            }
-        }
-    }
-
     public boolean removeCharacter(){
         String input;
         int index;
@@ -243,5 +183,73 @@ public class Party extends ArrayList<Character> implements Serializable{
             build.deleteCharAt(build.length() - 1);
         }
         return build.toString();
+    }
+
+
+    public static Party inputParty(){
+        System.out.println("Creating party");
+        Character c;
+        Party party = new Party();
+        while(true){
+            System.out.println("Please select an option\n-----------------------\n"
+                                + "1 - add character\n2 - remove character\n3 - replace character\n4 - edit character\n5 - see current party"
+                                + "\n6 - finish inputting party\n7 - quit party creation\n");
+            switch(Fire.in.nextLine()){
+            case "1":
+                System.out.print("\nMaking party member " + (party.size() + 1) + "\n--------------------");
+                int i = party.size() + 1;
+                while(i != 0){
+                    System.out.print("-");
+                    i /= 10;
+                }
+                System.out.println();
+                c = Character.inputPartyCharacter(party);
+                if (c != null) {party.add(c);}
+                break;
+            case "2":
+                System.out.println();
+                party.removeCharacter();
+                break;
+            case "3":
+                System.out.println();
+                party.replaceCharacter();
+                break;
+            case "4":
+                System.out.println();
+                party.editCharacter();
+                break;
+            case "5":
+                System.out.println("\n" + party + "\n");
+                break;
+            case "6":
+                if(party.size() == 0){
+                    System.out.println("\nThere must be at least 1 member in a party. Try again.\n");
+                    break;
+                }
+                System.out.println();
+                return party;
+            case "7":
+                while(true){
+                    System.out.println("\nWARNING: EXITING NOW WILL DELETE YOUR\n"
+                                        + "PARTY BUILDING PROGRESS.  CONTINUE TO EXIT? (Y/N)\n");
+                    switch(Fire.in.nextLine()){
+                    case "y": 
+                        System.out.println();
+                        return null;
+                    case "n":
+                    System.out.println();
+                        break;
+                    default:
+                        System.out.println("\nInvalid input. Try again.");
+                        continue;
+                    }
+                    break;
+                }
+                break;
+            default:
+                System.out.println("\nInvalid input. Try again");
+                break;
+            }
+        }
     }
 }
