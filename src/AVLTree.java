@@ -23,7 +23,7 @@ public class AVLTree<E extends Comparable<E>>{
             return true;
         }
         int beforeSize = size;
-        recAdd(data, root);
+        root = recAdd(data, root);
         if(beforeSize == size){ return false;}
         return true;
     }
@@ -36,11 +36,11 @@ public class AVLTree<E extends Comparable<E>>{
         int i = data.compareTo(current.data);
         if(i < 0){
             current.left = recAdd(data, current.left);
-            return current.left;
+            return current;
         }
         if(i > 0){
             current.right = recAdd(data, current.right);
-            return current.right;
+            return current;
         }
         return current;
     }
@@ -65,14 +65,44 @@ public class AVLTree<E extends Comparable<E>>{
         return temp;
     }
 
-    public E remove(E data){
-        if(root == null) {return null;}
-        Node<E> temp = getNode(data);
-        if(temp == null) {return null;}
-        if(temp.right == null && temp.left == null){
-            size --;
-            if(temp.parent == null){return temp.data;}
+    public boolean remove(E data){
+        if(root == null){
+            return false;
         }
+        int beforeSize = size;
+        root = removeRec(data, root);
+        if(beforeSize == size){return false;}
+        return true;
+    }
+
+    public Node<E> removeRec(E data, Node<E> current){
+        if(current == null) {return current;}
+        int i = data.compareTo(current.data);
+        if(i < 0){
+            current.left = removeRec(data, current.left);
+            return current;
+        }
+        if(i > 0){
+            current.right = removeRec(data, current.right);
+            return current;
+        }
+        size --;
+        if(current.left == null && current.right == null){return null;}
+        else if(current.right == null){return current.left;}
+        else if(current.left == null){return current.right;}
+        Node<E> replace = current.left;
+        if(replace.right != null){
+            Node<E> parent = replace;
+            replace = replace.right;
+            while(replace.right != null){
+                parent = parent.right;
+                replace = replace.right;
+            }
+            parent.right = null;
+        }
+        replace.right = current.right;
+        replace.left = current.left;
+        return replace;
     }
 
     private Node<E> getMax(Node<E> current){
@@ -101,16 +131,22 @@ public class AVLTree<E extends Comparable<E>>{
     public static void main(String [] args){
         AVLTree<Integer> tree = new AVLTree<Integer>();
         tree.add(5);
-        System.out.println(tree.get(5));
+        System.out.println(tree.get(5) + "\n");
         tree.add(3);
         tree.add(2);
         tree.add(4);
         tree.add(7);
         tree.add(6);
         tree.add(8);
-        System.out.println(tree);
+        System.out.println(tree + "\n");
         tree.remove(6);
         tree.remove(2);
-        System.out.println(tree);
+        System.out.println(tree + "\n");
+        tree.remove(5);
+        System.out.println(tree + "\n");
+        System.out.println(tree.get(8) + "\n");
+        System.out.println(tree.remove(5) + "\n");
+        System.out.println(tree + "\n");
+
     }
 }
