@@ -17,6 +17,7 @@ public class AVLTree<E extends Comparable<E>>{
     }
 
     public boolean add(E data){
+        System.out.println("Hi!");
         if(root == null){
             root = new Node<E>(data);
             size ++;
@@ -36,30 +37,55 @@ public class AVLTree<E extends Comparable<E>>{
         int i = data.compareTo(current.data);
         if(i < 0){
             current.left = recAdd(data, current.left);
+        }
+        else if(i > 0){
+            current.right = recAdd(data, current.right);
+        }
+        else{
             return current;
         }
-        if(i > 0){
-            current.right = recAdd(data, current.right);
-            return current;
+
+        calcHeight(current);
+        int balanceFactor = balanceFactor(current);
+        if(balanceFactor > 1){
+            if(data.compareTo(current.left.data) < 0){
+                return rotateRight(current);
+            }
+            else{
+                current.left = rotateLeft(current.left);
+                return rotateRight(current);
+            }
+        }
+        else if(balanceFactor < -1){
+            if(data.compareTo(current.right.data) > 0){
+                return rotateLeft(current);
+            }
+            else{
+                current.right = rotateRight(current.right);
+                return rotateLeft(current);
+            }
         }
         return current;
     }
 
     public E get(E data){
-        return getNode(data).data;
+        Node<E> temp = getNode(data);
+        if(temp == null){
+            return null;
+        }
+        return temp.data;
     }
 
     private Node<E> getNode(E data){
         Node<E> temp = root;
         int i = data.compareTo(root.data);
         while(temp != null && i != 0){
+            if(data.compareTo(temp.data) == 0){ return temp; }
             if(i < 0){
                 temp = temp.left;
-                i = data.compareTo(temp.data);
             }
             else{
                 temp = temp.right;
-                i = data.compareTo(temp.data);
             }
         }
         return temp;
@@ -80,38 +106,114 @@ public class AVLTree<E extends Comparable<E>>{
         int i = data.compareTo(current.data);
         if(i < 0){
             current.left = removeRec(data, current.left);
-            return current;
         }
-        if(i > 0){
+        else if(i > 0){
             current.right = removeRec(data, current.right);
-            return current;
         }
-        size --;
-        if(current.left == null && current.right == null){return null;}
-        else if(current.right == null){return current.left;}
-        else if(current.left == null){return current.right;}
-        Node<E> replace = current.left;
-        if(replace.right != null){
-            Node<E> parent = replace;
-            replace = replace.right;
-            while(replace.right != null){
-                parent = parent.right;
-                replace = replace.right;
+        else{
+            size --;
+            if(current.left == null && current.right == null){current = null;}
+            else if(current.right == null){current = current.left;}
+            else if(current.left == null){current = current.right;}
+            else{
+                Node<E> replace = current.left;
+                while(replace.right != null){
+                    replace = replace.right;
+                }
+                replace.right = current.right;
+                replace.left = current.left;
+                replace.left = removeRec(replace.data, replace.left);
+                current = replace;
             }
-            parent.right = null;
         }
-        replace.right = current.right;
-        replace.left = current.left;
-        return replace;
+        if(current == null) { return current; }
+        System.out.println("Node " + current.data + ": " + current.height);
+        calcHeight(current);
+        int balanceFactor = balanceFactor(current);
+        System.out.println(this);
+
+        if(balanceFactor > 1){
+            if(balanceFactor(root.left) >= 0){
+                return rotateRight(current);
+            }
+            else{
+                current.left = rotateLeft(current.left);
+                return rotateRight(current);
+            }
+        }
+        else if(balanceFactor < -1){
+            if(balanceFactor(root.right) <= 0){
+                return rotateLeft(current);
+            }
+            else{
+                current.right = rotateRight(current.right);
+                return rotateLeft(current);
+            }
+        }
+        return current;
     }
 
-    private Node<E> getMax(Node<E> current){
-        if(current.right == null){return current;}
-        return getMax(current.right);
+    private void calcHeight(Node<E> node){
+        if(node.left == null && node.right == null){
+            node.height = 1;
+            return;
+        }
+        if(node.left == null){
+            node.height = node.right.height + 1;
+            return;
+        }
+        if(node.right == null){
+            node.height = node.left.height + 1;
+            return;
+        }
+        node.height = Math.max(node.right.height, node.left.height) + 1;
+    }
+
+    private int balanceFactor(Node<E> n){
+        if(n == null || (n.left == null && n.right == null)){
+            return 0;
+        }
+        if(n.left == null){return -n.right.height;}
+        if(n.right == null){return n.left.height;}
+        return n.left.height - n.right.height;
+    }
+
+    private Node<E> rotateRight(Node<E> e){
+        Node<E> newRoot = e.left;
+        e.left = newRoot.right;
+        newRoot.right = e;
+
+        calcHeight(e);
+        calcHeight(newRoot);
+        return newRoot;
+    }
+
+    private Node<E> rotateLeft(Node<E> e){
+        Node<E> newRoot = e.right;
+        e.right = newRoot.left;
+        newRoot.left = e;
+
+        calcHeight(e);
+        calcHeight(newRoot);
+        return newRoot;
     }
 
     public String toString(){
-        return inOrder();
+        return inOrderTree();
+    }
+
+    public String inOrderTree(){
+        if(root == null) {return "";};
+        StringBuilder build = new StringBuilder();
+        inOrderTreeRec(root, build, 0);
+        return build.substring(0, build.length() - 1);
+    }
+
+    public void inOrderTreeRec(Node<E> current, StringBuilder build, int indent){
+        if(current.left != null){ inOrderTreeRec(current.left, build, indent + 3); }
+        for(int i = 0; i < indent; i ++) { build.append(" ");}
+        build.append(current.data + " " + current.height + "\n");
+        if(current.right != null){ inOrderTreeRec(current.right, build, indent + 3); }
     }
 
     public String inOrder(){
@@ -121,32 +223,10 @@ public class AVLTree<E extends Comparable<E>>{
         return build.substring(0, build.length() - 1);
     }
 
-    public void inOrderRec(Node<E> current, StringBuilder build){
+    private void inOrderRec(Node<E> current, StringBuilder build){
         if(current.left != null){inOrderRec(current.left, build);}
         build.append(current.data.toString() + "\n");
         if(current.right != null){inOrderRec(current.right, build);}
         return;
-    }
-
-    public static void main(String [] args){
-        AVLTree<Integer> tree = new AVLTree<Integer>();
-        tree.add(5);
-        System.out.println(tree.get(5) + "\n");
-        tree.add(3);
-        tree.add(2);
-        tree.add(4);
-        tree.add(7);
-        tree.add(6);
-        tree.add(8);
-        System.out.println(tree + "\n");
-        tree.remove(6);
-        tree.remove(2);
-        System.out.println(tree + "\n");
-        tree.remove(5);
-        System.out.println(tree + "\n");
-        System.out.println(tree.get(8) + "\n");
-        System.out.println(tree.remove(5) + "\n");
-        System.out.println(tree + "\n");
-
     }
 }
