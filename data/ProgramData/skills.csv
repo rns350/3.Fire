@@ -1,0 +1,41 @@
+﻿Appraise,INT,F,1
+Balance,DEX,T,1
+Bluff,CHA,F,1
+Climb,STR,T,1
+Concentration,CON,F,1
+Decipher Script,INT,F,1
+Diplomacy,CHA,F,1
+Disable Device,INT,F,1
+Disguise,CHA,F,1
+Escape Artist,DEX,T,1
+Forgery,INT,F,1
+Gather Information,CHA,F,1
+Handle Animal,CHA,F,1
+Heal,WIS,F,1
+Hide,DEX,T,1
+Intimidate,CHA,F,1
+Jump,STR,T,1
+Listen,WIS,F,1
+Move Silently,DEX,T,1
+Open Lock,DEX,F,1
+Ride,DEX,F,1
+Search,INT,F,1
+Sense Motive,WIS,F,1
+Sleight of Hand,DEX,T,1
+Spellcraft,INT,F,1
+Spot,WIS,F,1
+Survival,WIS,F,1
+Swim,STR,T,2
+Tumble,DEX,T,1
+Use Magic Device,CHA,F,1
+Use Rope,DEX,F,1
+Knowledge (arcana),INT,F,1
+Knowledge (dungeoneering),INT,F,1
+Knowledge (engineering),INT,F,1
+Knowledge (geography),INT,F,1
+Knowledge (history),INT,F,1
+Knowledge (local),INT,F,1
+Knowledge (nature),INT,F,1
+Knowledge (nobility),INT,F,1
+Knowledge (planes),INT,F,1
+Knowledge (religion),INT,F,1
