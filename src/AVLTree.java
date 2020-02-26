@@ -1,5 +1,8 @@
-public class AVLTree<E extends Comparable<E>>{
-    private class Node<E>{
+import java.io.Serializable;
+public class AVLTree<E extends Comparable<E>> implements Serializable{
+    public final static long serialVersionUID = 8729301928374728L;
+    private class Node<E> implements Serializable{
+        public final static long serialVersionUID = 1290872495623975L;
         int height;
         E data;
         Node<E> left, right;
@@ -17,7 +20,6 @@ public class AVLTree<E extends Comparable<E>>{
     }
 
     public boolean add(E data){
-        System.out.println("Hi!");
         if(root == null){
             root = new Node<E>(data);
             size ++;
@@ -199,7 +201,7 @@ public class AVLTree<E extends Comparable<E>>{
     }
 
     public String toString(){
-        return inOrderTree();
+        return inOrder();
     }
 
     public String inOrderTree(){

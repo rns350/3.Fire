@@ -6,12 +6,20 @@ public class SaveFile implements Serializable {
     private String name;
     private Party party;
     private boolean wasEdited = false;
+    private AVLTree<Skill> skills;
 
     public SaveFile(String name, Party party) {
         this.name = name;
         this.party = party;
     }
 
+    public void setSkills(AVLTree<Skill> skills){
+        this.skills = skills;
+    }
+
+    public String getSkills(){
+        return skills.toString();
+    }
     public boolean wasEdited(){
         return wasEdited;
     }
@@ -129,7 +137,7 @@ public class SaveFile implements Serializable {
 
     public boolean saveFile(){
         try{
-            Path saveDirectory = Paths.get(MainMenu.SAVE_FILE_LOCATION);
+            Path saveDirectory = Paths.get(DataReader.SAVE_FILE_LOCATION);
             if(!Files.exists(saveDirectory)){
                 Files.createDirectory(saveDirectory);
             }
@@ -148,7 +156,7 @@ public class SaveFile implements Serializable {
                     break;
                 }
             }
-            File save = new File(MainMenu.SAVE_FILE_LOCATION + "/" + name + ".txt");
+            File save = new File(DataReader.SAVE_FILE_LOCATION + "/" + name + ".txt");
             FileOutputStream dest = new FileOutputStream(save);
             ObjectOutputStream out = new ObjectOutputStream(dest);
 

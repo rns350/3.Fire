@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 import java.nio.file.*;
 public class MainMenu{
-    public static final String SAVE_FILE_LOCATION = "./../data/adventureData";
 
     public static SaveFile launch(){
         SaveFile currentSave;
@@ -65,13 +64,13 @@ public class MainMenu{
     }
 
     public static boolean filesExist(){
-        File saveDirectory = new File(SAVE_FILE_LOCATION);
+        File saveDirectory = new File(DataReader.SAVE_FILE_LOCATION);
         return (saveDirectory.exists() && saveDirectory.list().length != 0);
         
     }
 
     public static String [] getSaves(){
-        File saveDirectory = new File(SAVE_FILE_LOCATION);
+        File saveDirectory = new File(DataReader.SAVE_FILE_LOCATION);
         return (saveDirectory.list());
     }
 
@@ -138,6 +137,9 @@ public class MainMenu{
 
         SaveFile current = new SaveFile(name, party);
         if(!current.verifySave()){return null;}
+
+        DataReader.initialize(current);
+
         boolean getInput = true;
         while (getInput) {
             System.out.println("Save Adventure? (Y/N)\n");
@@ -196,7 +198,7 @@ public class MainMenu{
                 index = 0;
             }
         }
-        File toDelete = new File(SAVE_FILE_LOCATION + '/' + saveFiles[index]);
+        File toDelete = new File(DataReader.SAVE_FILE_LOCATION + '/' + saveFiles[index]);
         getInput = true;
         while(getInput){
             System.out.println("\nWARNING: CONTINUING WILL PERMANANTLY DELETE SAVE FILE: " + saveFiles[index].substring(0, saveFiles[index].length() - 4)

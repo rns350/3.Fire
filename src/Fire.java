@@ -11,8 +11,8 @@ public class Fire{
         System.out.println(currentSave + "\n");
         while(true){
             System.out.println("Please select an option\n-----------------------\n"
-                                + "1 - edit party\n2 - view current save\n3 - save\n"
-                                 + "4 - main menu\n");
+                                + "1 - edit party\n2 - view current save\n3 - view skills\n"
+                                + "4 - save\n5 - main menu\n");
             switch(in.nextLine()){
             case "1":
                 System.out.println();
@@ -22,10 +22,13 @@ public class Fire{
                 System.out.println("\n" + currentSave + "\n");
                 break;
             case "3":
+                System.out.println("\n" + currentSave.getSkills() + "\n");
+                break;
+            case "4":
                 System.out.println();
                 currentSave.saveFile();
                 break;
-            case "4":
+            case "5":
                 System.out.println();
                 if(currentSave.safeToExit()){
                     currentSave = MainMenu.launch();

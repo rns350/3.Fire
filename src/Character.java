@@ -2,32 +2,31 @@ import java.util.*;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
-enum StatType{
-    STR("str"), DEX("dex"), CON("con"), WIS("wis"), INTEL("int"), CHA("cha");
-
-    public static final EnumMap<StatType, String> statValue = new EnumMap<StatType, String>(StatType.class);
-    static {
-        for(StatType s : StatType.values()){
-            statValue.put(s, s.getValue());
+public class Character implements Serializable{
+    enum StatType{
+        STR("str"), DEX("dex"), CON("con"), WIS("wis"), INTEL("int"), CHA("cha");
+    
+        public static final EnumMap<StatType, String> statValue = new EnumMap<StatType, String>(StatType.class);
+        static {
+            for(StatType s : StatType.values()){
+                statValue.put(s, s.getValue());
+            }
+        }
+    
+        private String value;
+        private StatType(String value){
+            this.value = value;
+        }
+    
+        public String getValue(){
+            return value;
         }
     }
-
-    private String value;
-    private StatType(String value){
-        this.value = value;
-    }
-
-    public String getValue(){
-        return value;
-    }
-}
-
-public class Character implements Serializable{
     private static final long serialVersionUID = 436861726163746572L;
     private String name;
-    private int str, dex, con, intel, wis, cha;
-    private int [] skillRanks;
+    private int str, dex, con, intel, wis, cha, level;
     private int skillPoints;
+    private ArrayList<Rank> ranks;
     public Character(String name, int str, int dex, int con, int intel, int wis, int cha){
         this.name = name.trim();
         this.str = str;
@@ -63,7 +62,7 @@ public class Character implements Serializable{
     }
 
     public int wisMod(){
-        return wis/5 - 2;
+        return wis/2 - 5;
     }
 
     public int chaMod(){
@@ -71,7 +70,40 @@ public class Character implements Serializable{
     }
 
     public int rollInitiative(){
-        return dexMod() + (int)(Math.random() * 20 + 1);
+        return dexMod() + Dice.roll(20);
+    }
+
+    public int skillBonus(Skill s){
+        Rank temp = new rank(s);
+        int index = ranks.indexOf(temp);
+        if(index != -1){
+            return (int) ranks.get(index).ranks();
+        }
+        return 0;
+    }
+
+    public float addPoints(Skill s, int points){
+        if(points > skillPoints || points > (level + 3)) {return -1;}
+        if(ranks == null){ ranks = new ArrayList<Rank>();}
+        Rank temp = new Rank(s);
+        int index = ranks.indexOf(temp);
+        if(index != -1){
+            Rank increase = ranks.get(index);
+            float total = increase.ranks();
+            if(increase.classSkill()) {total += points;}
+            else {
+                total *= 2;
+                total += points;
+            }
+            if(total > level + 3){
+                return -1;
+            }
+            increase.increase(points);
+            return increase.ranks();
+        }
+        temp.increase(points);
+        ranks.add(temp);
+        return points;
     }
 
     public String toString(){
@@ -268,9 +300,5 @@ public class Character implements Serializable{
                 System.out.println("\nYou must enter an integer.  Try again.\n");
             }
         }
-    }
-
-    public static void main(String [] args){
-        System.out.println(Skill.skillValue.get(Skill.APPRAISE));
     }
 }
